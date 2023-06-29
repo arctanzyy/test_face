@@ -132,6 +132,8 @@
           url:'http://stg.app.xh123.com.cn/api/qiNiuContent',
           headers: {Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY4ODAyNDU4OSwiaWF0IjoxNjg4MDE3Mzg5fQ.XiZKqb9AA6lcheC5OH9NOPQlV-JRoWgJ84BEo2mdxEaApPGPAj5_mx9ILMZYuTltOx19f7J_neLMx2Km13lWtA"},
           data: formData
+        }).then(res => {
+          this.info = res
         })
 
       }
