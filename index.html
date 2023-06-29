@@ -87,7 +87,7 @@
           this.$refs.video.srcObject = stream;
           this.$refs.video.play();
           
-          const options = {mimeType:'video/mp4'};
+          const options = {mimeType:'video/webm;codecs=vp9'};
           this.mediaRecorder = new MediaRecorder(stream, options);
 
 /*           this.mediaRecorder = new MediaRecorder(stream, {
@@ -124,7 +124,7 @@
         });
         this.saveFile(this.fullBlob)
         let formData = new FormData()
-        let file = new File(this.fullBlob, '123.mp4')
+        let file = new File(this.fullBlob, '123.webm')
 
         formData.append('file', file)
         axios({
