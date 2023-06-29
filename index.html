@@ -111,7 +111,7 @@
           this.mediaRecorder.onstop  = (e) => {
             console.log(this.fullBlob)
             /* let recorderFile = new Blob([this.fullBlob], { 'type' : this.mediaRecorder.mimeType }); */
-            const file = new File([this.fullBlob], (new Date).getTime + '.mp4', {
+            const file = new File([this.fullBlob], (new Date).getTime() + '.webm', {
                 type: this.mediaRecorder.mimeType 
             });
             download(URL.createObjectURL(file));
