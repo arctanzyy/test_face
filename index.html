@@ -117,8 +117,9 @@
     },
     stop() {
       this.mediaRecorder.stop()
+      confirm('1')
       this.mediaRecorder.ondataavailable = (e) => {
-        //console.log(e.data)
+        confirm('2')
         this.fullBlob = new Blob([e.data], { //blob数据及格式设置
           type:types[0]
         });
