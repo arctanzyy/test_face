@@ -93,13 +93,12 @@
           this.mediaRecorder = new MediaRecorder(stream, options);
           this.mediaRecorder.ondataavailable = (e) => {
               console.log(e.data)
-              this.mediaRecorderChunks.push(e.data);
+              this.fullBlob = e.data
           };
 
           this.mediaRecorder.onstop  = (e) => {
-            console.log(this.mediaRecorderChunks)
-            let recorderFile = new Blob(this.mediaRecorderChunks, { 'type' : this.mediaRecorder.mimeType });
-            this.mediaRecorderChunks = [];
+            console.log(this.fullBlob)
+            let recorderFile = new Blob(this.fullBlob, { 'type' : this.mediaRecorder.mimeType });
             const file = new File([this.recorderFile], (new Date).toISOString().replace(/:|\./g, '-') + '.mp4', {
                 type: 'video/mp4'
             });
