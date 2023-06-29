@@ -96,7 +96,7 @@
           };
 
           this.mediaRecorder.onstop  = (e) => {
-            let recorderFile = new Blob(this.mediaRecorderChunks, { 'type' : mediaRecorder.mimeType });
+            let recorderFile = new Blob(this.mediaRecorderChunks, { 'type' : this.mediaRecorder.mimeType });
             this.mediaRecorderChunks = [];
             const file = new File([this.recorderFile], (new Date).toISOString().replace(/:|\./g, '-') + '.mp4', {
                 type: 'video/mp4'
