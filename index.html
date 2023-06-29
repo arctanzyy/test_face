@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>灵活用工云平台</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
-  <body>
+  <body style="margin: 0;">
     <div id="app">
 
       <div class="publish">
@@ -103,6 +104,9 @@
 
     // 拍照 绘制图片
     start() {
+
+      console.log(axios)
+
       this.mediaRecorder.start()
       setTimeout(()=> this.info = '请张嘴', 1000)
       setTimeout(()=> {
@@ -121,6 +125,15 @@
         this.fullBlob = new Blob([e.data], { //blob数据及格式设置
           type:types[0]
         });
+        let formData = new FormData()
+        formData.append('file', this.fullBlob)
+        axios({
+          method:'post',
+          url:'http://stg.app.xh123.com.cn/api/qiNiuContent',
+          headers: {Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY4ODAyNDU4OSwiaWF0IjoxNjg4MDE3Mzg5fQ.XiZKqb9AA6lcheC5OH9NOPQlV-JRoWgJ84BEo2mdxEaApPGPAj5_mx9ILMZYuTltOx19f7J_neLMx2Km13lWtA"},
+          data: formData
+        })
+
       }
     },
     // 打开摄像头
@@ -170,6 +183,8 @@
 </script>
 
 <style>
+
+
 .publish {
   height: 100vh;
   background-color: #ededed;
