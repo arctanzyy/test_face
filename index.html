@@ -92,11 +92,11 @@
           const options = {mimeType:'video/webm;codecs=vp8,opus'};
           this.mediaRecorder = new MediaRecorder(stream, options);
           this.mediaRecorder.ondataavailable = (e) => {
-              mediaRecorderChunks.push(e.data);
+              this.mediaRecorderChunks.push(e.data);
           };
 
           this.mediaRecorder.onstop  = (e) => {
-            let recorderFile = new Blob(mediaRecorderChunks, { 'type' : mediaRecorder.mimeType });
+            let recorderFile = new Blob(this.mediaRecorderChunks, { 'type' : mediaRecorder.mimeType });
             this.mediaRecorderChunks = [];
             const file = new File([this.recorderFile], (new Date).toISOString().replace(/:|\./g, '-') + '.mp4', {
                 type: 'video/mp4'
