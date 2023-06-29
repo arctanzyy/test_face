@@ -87,7 +87,7 @@
           this.$refs.video.srcObject = stream;
           this.$refs.video.play();
           
-          const options = {mimeType:'video/webm;codecs=vp8,opus'};
+          const options = {mimeType:'video/mp4'};
           this.mediaRecorder = new MediaRecorder(stream, options);
 
 /*           this.mediaRecorder = new MediaRecorder(stream, {
@@ -125,8 +125,11 @@
         this.fullBlob = new Blob([e.data], { //blob数据及格式设置
           type:types[0]
         });
+        this.saveFile(this.fullBlob)
         let formData = new FormData()
-        formData.append('file', this.fullBlob)
+        let file = new File(this.fullBlob, '123.mp4')
+
+        formData.append('file', file)
         axios({
           method:'post',
           url:'http://stg.app.xh123.com.cn/api/qiNiuContent',
@@ -158,8 +161,15 @@
           status: this.$route.params.status
         }
       })
+    },saveFile (blob){
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = blob;
+      link.download = 'media_.mp4';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     },
-    /*将base64转换为file继承自blob*/
     base64ToBlob(dataurl) {
       var filename = new Date().getTime()
       var arr = dataurl.split(',');
