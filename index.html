@@ -1,0 +1,199 @@
+<div id="app">
+
+    <div class="publish">
+      <div>
+        <el-button style="padding: 10px 20px;" type="text" icon="el-icon-back" @click="goBack"></el-button>
+      </div>
+  
+      <div class="videoDiv">
+        <video ref="video"></video>
+      </div>
+  
+     <div>
+       <div class="info-div">{{info}}</div>
+       <p class="text">请将脸部置于取景框中，<br/>并确保脸部清晰，光线充足，<br/>然后点击录制。</p>
+     </div>
+      <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+        <button class="weui-btn weui-btn_primary" @click="start">录制</button>
+      </div>
+    </div>
+
+</div>
+
+<script type="module">
+  import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+  
+  createApp({
+    data() {
+      return {
+        mediaStreamTrack: {},
+        video_stream: "", // 视频stream
+        mediaRecorder: null,
+        fullBlob: null,
+        info:'',
+      }
+    },
+    mounted() {
+    console.log()
+    // 进入页面 自动调用摄像头
+    this.getCamera();
+    if (window.history && window.history.pushState) {
+      // 往历史记录里面添加一条新的当前页面的url
+      // history.pushState(null, null, document.URL);
+      // 给 popstate 绑定一个方法 监听页面刷新
+      window.addEventListener('popstate', this.backChange, false)//false阻止默认事件
+    }
+    //刷新退出
+    window.addEventListener('beforeunload', e => {
+      this.$store.dispatch('LogOut')
+    });
+    //关闭窗口退出
+    window.addEventListener('unload', e => {
+      this.$store.dispatch('LogOut')
+    });
+  },
+  methods: {
+    // 调用打开摄像头功能
+    getCamera() {
+      // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
+      if (navigator.mediaDevices === undefined) {
+        navigator.mediaDevices = {};
+      }
+      // 正常支持版本
+      navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+          audio: false,
+        })
+        .then((stream) => {
+          // 摄像头开启成功
+          this.mediaStreamTrack =
+            typeof stream.stop === "function" ? stream : stream.getTracks()[0];
+          this.video_stream = stream;
+          this.$refs.video.srcObject = stream;
+          this.$refs.video.play();
+
+          this.mediaRecorder = new MediaRecorder(stream, {
+            audioBitsPerSecond: 128000,
+            videoBitsPerSecond: 2500000,
+            mimeType: types[0]
+          });
+
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    // 拍照 绘制图片
+    start() {
+      // this.mediaRecorder.start()
+      setTimeout(()=> this.info = '请张嘴', 1000)
+      setTimeout(()=> {
+        this.info = '完成'
+        this.stop()
+        this.closeCamera()
+        //上传文件
+      }, 5000)
+
+
+    },
+    stop() {
+      this.mediaRecorder.stop()
+      this.mediaRecorder.ondataavailable = (e) => {
+        //console.log(e.data)
+        this.fullBlob = new Blob([e.data], { //blob数据及格式设置
+          type:types[0]
+        });
+      }
+    },
+    // 打开摄像头
+    openCamera() {
+      console.log("打开摄像头");
+      this.getCamera();
+    },
+    // 关闭摄像头
+    closeCamera() {
+      console.log("关闭摄像头");
+      this.$refs.video.srcObject.getTracks()[0].stop();
+    },
+    goBack() {
+      return this.$router.push({
+        name: 'face_phone',
+        params: {
+          account: this.$route.params.account,
+          name: this.$route.params.name,
+          phone: this.$route.params.phone,
+          status: this.$route.params.status
+        }
+      })
+    },
+    /*将base64转换为file继承自blob*/
+    base64ToBlob(dataurl) {
+      var filename = new Date().getTime()
+      var arr = dataurl.split(',');
+      var mime = arr[0].match(/:(.*?);/)[1]; /*文件类型*/
+      var bstr = atob(arr[1]);
+      var n = bstr.length;
+      var u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, {type: mime});
+    },
+    upload() {
+
+    }
+
+  },
+
+
+
+
+  }).mount('#app')
+</script>
+
+<style>
+.publish {
+  height: 100vh;
+  background-color: #ededed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.videoDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.info-div{
+  text-align: center;
+  color: #06ae56;
+  font-size: 20px;
+  min-height: 30px;
+  font-weight: bold;
+}
+
+.text {
+  text-align: center;
+  color: #06ae56;
+}
+
+video {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+canvas {
+  width: 100%;
+  height: 300px;
+}
+
+.img_bg_camera img {
+  width: 300px;
+  height: 200px;
+}
+</style>
