@@ -87,7 +87,7 @@
           this.$refs.video.srcObject = stream;
           this.$refs.video.play();
           
-          const options = {mimeType:'video/webm;codecs=vp9'};
+          const options = {mimeType:'video/webm;codecs=vp8,opus'};
           this.mediaRecorder = new MediaRecorder(stream, options);
 
 /*           this.mediaRecorder = new MediaRecorder(stream, {
