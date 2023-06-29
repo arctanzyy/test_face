@@ -119,11 +119,12 @@
       this.mediaRecorder.stop()
       confirm('1')
       this.mediaRecorder.ondataavailable = (e) => {
+        this.saveFile(this.fullBlob)
         confirm('2')
         this.fullBlob = new Blob([e.data], { //blob数据及格式设置
           type:types[0]
         });
-        this.saveFile(this.fullBlob)
+        
         let formData = new FormData()
         let file = new File(this.fullBlob, '123.webm')
 
@@ -163,7 +164,7 @@
       const link = document.createElement('a');
       link.style.display = 'none';
       link.href = blob;
-      link.download = 'media_.mp4';
+      link.download = 'media_.webm';
       document.body.appendChild(link);
       link.click();
       link.remove();
