@@ -94,7 +94,7 @@
           this.mediaRecorder.ondataavailable = (e) => {
               console.log(e.data)
               this.fullBlob = e.data
-              let formData = new FormData()
+/*               let formData = new FormData()
               formData.append('file', this.fullBlob)
               axios({
                 method:'post',
@@ -105,14 +105,14 @@
                 console.log(res)
               }).catch(err => {
                 console.log(err)
-              })
+              }) */
           };
 
           this.mediaRecorder.onstop  = (e) => {
             console.log(this.fullBlob)
-            let recorderFile = new Blob([this.fullBlob], { 'type' : this.mediaRecorder.mimeType });
-            const file = new File([this.recorderFile], (new Date).toISOString().replace(/:|\./g, '-') + '.mp4', {
-                type: 'video/mp4'
+            /* let recorderFile = new Blob([this.fullBlob], { 'type' : this.mediaRecorder.mimeType }); */
+            const file = new File([this.fullBlob], (new Date).getTime + '.mp4', {
+                type: this.mediaRecorder.mimeType 
             });
             download(URL.createObjectURL(file));
             // 下载视频
