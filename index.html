@@ -86,6 +86,8 @@
           this.$refs.video.srcObject = stream;
           this.$refs.video.play();
           
+          const options = {mimeType:'video/webm;codecs=vp8,opus'};
+          this.mediaRecorder = new MediaRecorder(stream, options);
 
 /*           this.mediaRecorder = new MediaRecorder(stream, {
             audioBitsPerSecond: 128000,
@@ -101,7 +103,7 @@
 
     // 拍照 绘制图片
     start() {
-      /* this.mediaRecorder.start() */
+      this.mediaRecorder.start()
       setTimeout(()=> this.info = '请张嘴', 1000)
       setTimeout(()=> {
         this.info = '完成'
