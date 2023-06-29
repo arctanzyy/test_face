@@ -86,11 +86,7 @@
           this.$refs.video.srcObject = stream;
           this.$refs.video.play();
 
-          this.mediaRecorder = new MediaRecorder(stream, {
-            audioBitsPerSecond: 128000,
-            videoBitsPerSecond: 2500000,
-            mimeType: types[0]
-          });
+
 
         })
         .catch((err) => {
