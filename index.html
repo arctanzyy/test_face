@@ -44,6 +44,7 @@
         mediaStreamTrack: {},
         video_stream: "", // 视频stream
         mediaRecorder: null,
+        mediaRecorderChunks : [],
         fullBlob: null,
         info:'',
       }
@@ -90,6 +91,27 @@
           
           const options = {mimeType:'video/webm;codecs=vp8,opus'};
           this.mediaRecorder = new MediaRecorder(stream, options);
+          this.mediaRecorder.ondataavailable = (e) => {
+              mediaRecorderChunks.push(e.data);
+          };
+
+          this.mediaRecorder.onstop  = (e) => {
+            let recorderFile = new Blob(mediaRecorderChunks, { 'type' : mediaRecorder.mimeType });
+            this.mediaRecorderChunks = [];
+            const file = new File([this.recorderFile], (new Date).toISOString().replace(/:|\./g, '-') + '.mp4', {
+                type: 'video/mp4'
+            });
+            download(URL.createObjectURL(file));
+            // 下载视频
+            function download (src) {
+                if (!src) return;
+                const a = document.createElement('a');
+                a.setAttribute('download', new Date());
+                a.href = src;
+                a.click();
+            }
+
+          };
 
 /*           this.mediaRecorder = new MediaRecorder(stream, {
             audioBitsPerSecond: 128000,
@@ -118,7 +140,7 @@
     },
     stop() {
       this.mediaRecorder.stop()
-      confirm('1')
+/*       confirm('1')
       this.mediaRecorder.ondataavailable = (e) => {
         this.saveFile(this.fullBlob)
         confirm('2')
@@ -140,7 +162,7 @@
         })
         confirm('5')
 
-      }
+      } */
     },
     // 打开摄像头
     openCamera() {
