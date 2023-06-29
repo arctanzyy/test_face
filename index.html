@@ -15,7 +15,7 @@
         </div>
     
         <div class="videoDiv">
-          <video ref="video"></video>
+          <video :class="{'arrow_box': flag}" ref="video"></video>
         </div>
     
        <div>
@@ -46,6 +46,7 @@
         mediaRecorderChunks : [],
         fullBlob: null,
         info:'',
+        flag:false,
       }
     },
     mounted() {
@@ -118,7 +119,7 @@
             function download (src) {
                 if (!src) return;
                 const a = document.createElement('a');
-                a.setAttribute('download', new Date());
+                a.setAttribute('download', new Date().getTime());
                 a.href = src;
                 a.click();
             }
@@ -139,6 +140,7 @@
 
     // 拍照 绘制图片
     start() {
+      this.flag = true
       this.mediaRecorder.start()
       setTimeout(()=> this.info = '请张嘴', 1000)
       setTimeout(()=> {
@@ -151,6 +153,7 @@
 
     },
     stop() {
+      this.flag = false
       this.mediaRecorder.stop()
 /*       confirm('1')
       this.mediaRecorder.ondataavailable = (e) => {
@@ -273,5 +276,17 @@ canvas {
 .img_bg_camera img {
   width: 300px;
   height: 200px;
+}
+
+.arrow_box{animation: glow 800ms ease-out infinite alternate; }
+@keyframes glow {
+  0% {
+    border-color: #393;
+    box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 1px 0 #393;
+  }
+  100% {
+    border-color: #6f6;
+    box-shadow: 0 0 20px rgba(0,255,0,.6), inset 0 0 10px rgba(0,255,0,.4), 0 1px 0 #6f6;
+  }
 }
 </style>
