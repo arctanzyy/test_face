@@ -125,10 +125,10 @@
         this.fullBlob = new Blob([e.data], { //blob数据及格式设置
           type:types[0]
         });
-        
+        confirm('3')
         let formData = new FormData()
         let file = new File(this.fullBlob, '123.webm')
-
+        confirm('4')
         formData.append('file', file)
         axios({
           method:'post',
@@ -138,6 +138,7 @@
         }).then(res => {
           this.info = res
         })
+        confirm('5')
 
       }
     },
