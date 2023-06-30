@@ -71,6 +71,45 @@
   methods: {
     // 调用打开摄像头功能
     getCamera() {
+      
+      const handleSuccess  = stream => {
+        if (this.$refs.video.srcObject !== undefined) {
+            this.$refs.video.srcObject = stream;
+          } else if (window.videoEl.mozSrcObject !== undefined) {
+            this.$refs.video.mozSrcObject = stream;
+          } else if (window.URL.createObjectURL) {
+            this.$refs.video.src = window.URL.createObjectURL(stream);
+          } else if (window.webkitURL) {
+            this.$refs.video.src = window.webkitURL.createObjectURL(stream);
+          } else {
+            this.$refs.video.src = stream;
+          }
+
+          this.$refs.video.play();
+
+
+
+      }
+
+
+      if (navigator.mediaDevices.getUserMedia) {
+        //最新标准API
+        //mediaDevices
+        navigator.mediaDevices.getUserMedia(constrains).then(success).catch(error);
+      } else if (navigator.webkitGetUserMedia) {
+        //webkit内核浏览器
+        navigator.webkitGetUserMedia(constrains).then(success).catch(error);
+      } else if (navigator.mozGetUserMedia) {
+        //Firefox浏览器
+        navigator.mozGetUserMedia(constrains).then(success).catch(error);
+      } else if (navigator.getUserMedia) {
+        //旧版API
+        navigator.getUserMedia(constrains).then(success).catch(error);
+      } else {
+        this.info = "你的浏览器不支持访问用户媒体设备"
+      }
+
+
       // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
       if (navigator.mediaDevices === undefined) {
         navigator.mediaDevices = {};
