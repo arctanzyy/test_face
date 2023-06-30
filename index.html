@@ -130,7 +130,11 @@
           video: true,
           audio: false,
         }
-        
+      const error = e => {
+        console.log(e)
+      }
+
+
       if (navigator.mediaDevices.getUserMedia) {
         //最新标准API
         //mediaDevices
