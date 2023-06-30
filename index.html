@@ -87,47 +87,6 @@
 
           this.$refs.video.play();
 
-
-
-      }
-
-
-      if (navigator.mediaDevices.getUserMedia) {
-        //最新标准API
-        //mediaDevices
-        navigator.mediaDevices.getUserMedia(constrains).then(success).catch(error);
-      } else if (navigator.webkitGetUserMedia) {
-        //webkit内核浏览器
-        navigator.webkitGetUserMedia(constrains).then(success).catch(error);
-      } else if (navigator.mozGetUserMedia) {
-        //Firefox浏览器
-        navigator.mozGetUserMedia(constrains).then(success).catch(error);
-      } else if (navigator.getUserMedia) {
-        //旧版API
-        navigator.getUserMedia(constrains).then(success).catch(error);
-      } else {
-        this.info = "你的浏览器不支持访问用户媒体设备"
-      }
-
-
-      // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
-      if (navigator.mediaDevices === undefined) {
-        navigator.mediaDevices = {};
-      }
-      // 正常支持版本
-      navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: false,
-        })
-        .then((stream) => {
-          // 摄像头开启成功
-          this.mediaStreamTrack =
-            typeof stream.stop === "function" ? stream : stream.getTracks()[0];
-          this.video_stream = stream;
-          this.$refs.video.srcObject = stream;
-          this.$refs.video.play();
-          
           const options = {mimeType:'video/webm;codecs=vp8,opus'};
           this.mediaRecorder = new MediaRecorder(stream, options);
           this.mediaRecorder.ondataavailable = (e) => {
@@ -165,16 +124,32 @@
 
           };
 
-/*           this.mediaRecorder = new MediaRecorder(stream, {
-            audioBitsPerSecond: 128000,
-            videoBitsPerSecond: 2500000,
-            mimeType: types[0]
-          }); */
+      }
 
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      const constrains = {
+          video: true,
+          audio: false,
+        }
+        
+      if (navigator.mediaDevices.getUserMedia) {
+        //最新标准API
+        //mediaDevices
+        navigator.mediaDevices.getUserMedia(constrains).then(handleSuccess).catch(error);
+      } else if (navigator.webkitGetUserMedia) {
+        //webkit内核浏览器
+        navigator.webkitGetUserMedia(constrains).then(handleSuccess).catch(error);
+      } else if (navigator.mozGetUserMedia) {
+        //Firefox浏览器
+        navigator.mozGetUserMedia(constrains).then(handleSuccess).catch(error);
+      } else if (navigator.getUserMedia) {
+        //旧版API
+        navigator.getUserMedia(constrains).then(handleSuccess).catch(error);
+      } else {
+        this.info = "你的浏览器不支持访问用户媒体设备"
+      }
+
+
+
     },
 
     // 拍照 绘制图片
